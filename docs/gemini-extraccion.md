@@ -85,7 +85,7 @@ Reglas:
 4. precio_unitario es el precio de una unidad facturada tal como figura (si se factura por bulto,
    el precio del bulto). No lo dividas por las unidades del bulto.
 5. bonificacion_porcentaje es el % de descuento del renglón; bonificacion_monto, el descuento en pesos
-   del renglón. No apliques descuentos generales de la factura a los renglones.
+   del renglón. No apliques descuentos generales de la factura (al pie) a los renglones.
 6. precios_incluyen_iva: "no" si la factura discrimina IVA (columna o subtotal de IVA aparte,
    típico de factura A); "si" si los precios ya lo incluyen (típico de B y C); "no_se" si dudás.
 7. alicuota_iva: solo si figura para ese renglón; si no, null.
@@ -94,6 +94,7 @@ Reglas:
    (borroso, tapado, cortado, escrito a mano). Explicá en "nota" qué no se lee.
 10. Ignorá renglones que no son mercadería: subtotales, percepciones, recargos, envases retornables
     y leyendas.
+    Sí incluí la mercadería sin cargo o bonificada al 100 % (precio 0 o bonificación 100), como un renglón más.
 11. Si la imagen no es un comprobante de compra, es_factura = false y renglones vacío.
 ```
 
@@ -110,3 +111,6 @@ Marcan el renglón en **amarillo** con un motivo visible:
 - Rubro "Sin categoría" en un producto nuevo → "Elegí el rubro".
 - Suma de importes con diferencia > 2 % contra `total_factura` → aviso en la cabecera (no bloquea).
 - `precios_incluyen_iva = "no_se"` → el botón con IVA / sin IVA aparece sin elegir y hay que tocarlo.
+- Renglón de regalo (precio 0 o bonificación 100 %) sin renglón pago del mismo producto → "Regalo sin compra" (D17, P15).
+
+Avisos de cabecera (no bloquean, D12): factura repetida (mismo proveedor y número) y factura vieja (productos con una compra de fecha posterior). Por eso el prompt pide el número y la fecha con cuidado.

@@ -5,7 +5,7 @@ Estado: borrador
 Productos que se compran a granel (cereales, snacks, condimentos) y se venden en bolsitas o por peso. Hoy calcular su precio es especialmente lento.
 
 ## Usuarios
-Administradora.
+Administradora y familia (mismos permisos, D5).
 
 ## Definiciones
 - **Por fracción**: bolsitas de peso fijo; se vende cada bolsita.
@@ -32,7 +32,7 @@ Administradora.
 - Cambio de modo de un producto ya fraccionado.
 
 ## Fuera de alcance
-- Fraccionados que llegan en facturas fotografiadas (P10).
+- Fraccionados que llegan en facturas fotografiadas (D14: se resuelve después).
 - Merma por fraccionado.
 
 ## Criterios de finalización
@@ -40,4 +40,4 @@ Administradora.
 - Demo con los dos ejemplos de las historias.
 
 ## Dudas abiertas
-- [NECESITA ACLARACIÓN] P10 y P11 de `docs/riesgos-y-preguntas.md`.
+- (ninguna: D14 y D15 resueltas)

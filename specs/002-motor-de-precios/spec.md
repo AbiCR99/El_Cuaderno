@@ -25,7 +25,9 @@ Ninguno directo (lo usan las specs 003, 005 y 007).
 - RF-9: SI la bonificación deja el neto en negativo, ENTONCES EL SISTEMA devuelve un error de validación.
 - RF-10: EL SISTEMA normaliza textos de proveedor para alias: mayúsculas, sin tildes, sin signos repetidos, espacios colapsados ("Gall. Oreo  118g x24" → "GALL. OREO 118G X24").
 - RF-11: EL SISTEMA interpreta números escritos en formato argentino ("1.234,50" → 1234,50) en todos los campos de carga.
-- RF-12: CUANDO se aplica la migración inicial, EL SISTEMA crea las tablas, políticas y RPC de `docs/modelo-datos.md` y los 11 rubros iniciales con sus márgenes.
+- RF-12: SI un renglón tiene costo 0 (precio $0 o bonificación 100 %) y en la misma factura hay un renglón pago del mismo producto, ENTONCES EL SISTEMA suma sus unidades a ese renglón y calcula un solo costo unitario: costo pagado ÷ (unidades pagas + unidades de regalo) (D17).
+- RF-13: SI un renglón de regalo no tiene un renglón pago del mismo producto en la factura, ENTONCES EL SISTEMA no calcula costo ni precio para ese producto y lo devuelve como "regalo sin compra" (P15).
+- RF-14: CUANDO se aplica la migración inicial, EL SISTEMA crea las tablas, políticas y RPC de `docs/modelo-datos.md` y los 11 rubros iniciales con sus márgenes.
 
 ## Requisitos no funcionales
 - Funciones puras en `src/dominio/`, sin React ni Supabase, con cobertura de tests de todos los RF de cálculo.
@@ -35,14 +37,15 @@ Ninguno directo (lo usan las specs 003, 005 y 007).
 - Margen 0 %. Margen con decimales (17,5 %).
 - Precio resultante menor a 5 (redondea a 0): se marca para revisión en lugar de sugerir $0.
 - Alícuota 10,5 % y 27 %.
-- Bonificación 100 % (unidad de regalo): costo 0, sin precio sugerido, pendiente de P14.
+- Bonificación 100 % (unidad de regalo) con y sin renglón pago del mismo producto.
+- Dos renglones pagos del mismo producto con precios distintos más uno de regalo.
 
 ## Fuera de alcance
-- Descuentos generales de la factura (P9).
+- Descuentos generales al pie de la factura: se ignoran (D13).
 
 ## Criterios de finalización
 - `npm run test` en verde con un caso por RF de cálculo y por caso límite.
 - Migración aplicada en el proyecto de desarrollo; `get_advisors` de Supabase sin alertas de seguridad.
 
 ## Dudas abiertas
-- [NECESITA ACLARACIÓN] P14 (renglones bonificados al 100 %) en `docs/riesgos-y-preguntas.md`.
+- [NECESITA ACLARACIÓN] P15 (regalo sin compra del mismo producto) en `docs/riesgos-y-preguntas.md`.

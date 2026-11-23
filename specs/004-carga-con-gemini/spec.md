@@ -5,7 +5,7 @@ Estado: borrador
 Sacar una foto o subir un PDF tiene que reemplazar el tipeo de renglones. La lectura nunca puede bloquear a la usuaria: si no hay conexión o la API está saturada, la factura espera en cola y se lee sola.
 
 ## Usuarios
-Administradora.
+Administradora y familia (mismos permisos, D5).
 
 ## Historias de usuario
 - HU-1. Como administradora quiero sacar una foto a la factura y recibir los renglones listos para revisar.
@@ -26,7 +26,7 @@ Administradora.
 - RF-11: SI tras 8 intentos sigue fallando, o la imagen no es una factura, ENTONCES EL SISTEMA la marca con error y ofrece "Sacar otra" y "Cargar a mano".
 - RF-12: MIENTRAS se lee la factura, EL SISTEMA muestra "Leyendo la factura…" y, pasados 20 s, permite volver a Inicio sin cancelar la lectura.
 - RF-13: EL SISTEMA ofrece "Cargar a mano" en todo momento como alternativa.
-- RF-14: CUANDO la administradora toca "Agregar otra hoja" antes de enviar, EL SISTEMA agrupa varias fotos en una sola factura. [NECESITA ACLARACIÓN P7]
+- RF-14: EL SISTEMA trata cada foto como una factura completa (no hay facturas de varias hojas, D11).
 
 ## Requisitos no funcionales
 - La foto nunca se borra del dispositivo hasta que la base confirma que el archivo y la fila existen.
@@ -42,7 +42,8 @@ Administradora.
 
 ## Fuera de alcance
 - Recorte o enderezado de la foto en la app.
-- Detectar facturas repetidas (P8, se decide en la spec 003).
+- Facturas de varias hojas (D11).
+- Detectar facturas repetidas o viejas (lo hace la revisión, spec 003, D12).
 
 ## Criterios de finalización
 - Set de prueba de 15–20 facturas reales: comparación de modelos documentada en `docs/gemini-extraccion.md` y modelo elegido.
@@ -50,4 +51,4 @@ Administradora.
 - Test de la función con una respuesta 429 simulada.
 
 ## Dudas abiertas
-- [NECESITA ACLARACIÓN] P7 (varias hojas).
+- (ninguna)

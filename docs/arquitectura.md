@@ -27,13 +27,17 @@ Sin librería de estilos ni de componentes: CSS Modules con variables. Sin libre
 
 ## Backend: Supabase
 
-- **Postgres con RLS** en todas las tablas. Roles: `admin` (la dueña), `dev` (vos), `familia` (cuenta compartida con PIN). Ver `docs/modelo-datos.md`.
+- **Postgres con RLS** en todas las tablas. Roles: `admin` (la dueña), `dev` (vos), `familia` (cuenta compartida con PIN), todos con los mismos permisos (D5); el rol sirve para saber quién hizo cada cambio. Sin sesión, nada. Ver `docs/modelo-datos.md`.
 - **RPC atómicas** para escribir: `confirmar_factura`, `aplicar_precios`, `eliminar_rubro`. El cliente calcula los precios con `src/dominio/precios.ts` y la RPC los guarda junto con el historial, todo o nada.
-- **RPC de lectura para la familia**: `lista_precios(desde)` y `lista_rubros()`, `security definer`, devuelven solo columnas seguras.
+- **RPC de sincronización**: `lista_precios(desde)` devuelve los productos cambiados (con alias) para la base local del celular.
 - **Storage**: bucket privado `facturas` (fotos y PDF). Solo `admin`/`dev`.
 - **Edge Function `extraer-factura`** (Deno): recibe el id de la factura, lee el archivo o el texto, llama a Gemini con structured output y guarda los renglones. La key está en `supabase secrets`.
 - **pg_cron + pg_net**: cada 2 minutos reintenta facturas en cola (429, errores transitorios). Se adelanta de la fase 2 porque el brief pide que la cola "se reintente sola" aunque la app esté cerrada.
-- **Proyectos**: se recomiendan dos proyectos de Supabase (`dev` y `prod`) para no probar migraciones sobre los datos reales. El MCP de Supabase apunta solo a `dev`. Ver pregunta abierta en `docs/riesgos-y-preguntas.md`.
+- **Proyectos** (D6): cuenta nueva de Supabase en plan gratis, con dos proyectos, `dev` y `prod`, para no probar migraciones sobre los datos reales. El MCP de Supabase apunta solo a `dev`. El plan gratis pausa un proyecto tras una semana sin uso y no hace backups: `prod` se usa a diario y se hace un `npx supabase db dump` semanal.
+
+## Entorno de desarrollo (D16)
+
+Mac mini con macOS Monterey: **Node 22 LTS** (Node 24 ya no tiene binarios para Monterey). Supabase CLI con `npx supabase`, sin instalación global ni Docker; no se levanta una base local, se trabaja contra `dev`.
 
 ## Gemini
 

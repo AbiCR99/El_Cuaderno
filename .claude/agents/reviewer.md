@@ -19,7 +19,8 @@ Listá: (1) ambigüedades, (2) contradicciones, (3) casos límite no cubiertos, 
 4. Revisá siempre:
    - Cuentas de costo o precio fuera de `src/dominio/` (buscá `* (1 +`, `Math.round`, `toFixed` en pantallas y SQL).
    - Redondeo: 115 → 120 y `100 × 15 %` → 120.
-   - Seguridad: tablas sin RLS, políticas para `anon`, columnas de costo o margen en `lista_precios`, `service_role` o claves en el cliente, `get_advisors`.
+   - Seguridad: tablas sin RLS, políticas para `anon` o `using (true)`, acceso sin perfil, `service_role` o claves en el cliente, `get_advisors`.
+   - Factura vieja: confirmar una factura con fecha anterior a la última compra de un producto no cambia su costo ni su precio.
    - Textos en español rioplatense y estados de carga, error y vacío.
    - Que no se muestre "stock" en ninguna pantalla.
 5. Comprobá los criterios de finalización de la spec.

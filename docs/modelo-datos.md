@@ -10,6 +10,7 @@ Este documento es la referencia. Las migraciones reales se escriben en `supabase
 | `productos.margen_override` | Eliminado | El brief no pide margen por producto. El escape para un producto puntual es `precio_fijo`. Si hace falta, vuelve con una spec. |
 | `productos.codigo_barras` | Pasa a tabla `codigos_barras` en fase 2 | Un producto puede tener varios códigos (unidad, pack). En fase 1 no se usa. |
 | `productos.actualizado_en` | `precio_actualizado_en` y `costo_actualizado_en` | "Hace 3 días" se refiere al precio, no a cualquier cambio. |
+| — | `productos.ultima_compra_fecha` | Fecha de factura de la última compra que fijó el costo. Detecta facturas viejas (D12). |
 | `alias_producto.texto_proveedor` | `texto_original` + `texto_normalizado` (único por proveedor) | El emparejamiento compara texto normalizado (mayúsculas, sin tildes, espacios colapsados). |
 | `proveedores` | + `cuit` (opcional) | Identifica al proveedor aunque el nombre aparezca escrito distinto. Gemini lo lee si figura. |
 | `facturas` | + `id uuid` generado en el celular, `origen`, `numero`, `intentos`, `proximo_intento_en`, `ultimo_error`, `extraccion_cruda`, `modelo_ia` | Idempotencia de la cola offline, reintentos, auditoría de lo que leyó Gemini. |
@@ -73,6 +74,7 @@ create table public.productos (
   precio_100g           integer,           -- solo modo 'peso'
   costo_actualizado_en  timestamptz,
   precio_actualizado_en timestamptz,
+  ultima_compra_fecha   date,              -- fecha de la factura más nueva que fijó el costo (D12)
   ultimo_proveedor_id   bigint references public.proveedores,
   activo                boolean not null default true,
   creado_en             timestamptz not null default now(),
@@ -118,6 +120,7 @@ create table public.facturas (
   confirmada_en      timestamptz
 );
 create index facturas_estado on public.facturas (estado, proximo_intento_en);
+create index facturas_proveedor_numero on public.facturas (proveedor_id, numero) where numero is not null;  -- aviso de repetida (D12), no único
 create index facturas_proveedor_fecha on public.facturas (proveedor_id, fecha desc);
 
 create table public.factura_items (
@@ -174,7 +177,9 @@ Triggers: `actualizado_en` en `productos` y `categorias`. Ninguno calcula precio
 
 Semilla (migración, no `seed.sql`, porque también va a producción): los 11 rubros del brief, con `Cigarrillos` `precio_fijo = true, margen_pct = null` y `Sin categoría` `es_sin_categoria = true, margen_pct = 30`.
 
-## Funciones auxiliares de rol
+## Funciones auxiliares de acceso
+
+Los tres roles tienen **los mismos permisos** (D5). El rol se guarda igual, para saber quién hizo cada cambio y por si en el futuro hace falta distinguirlos.
 
 ```sql
 create function public.rol_actual() returns public.rol_usuario
@@ -182,88 +187,65 @@ language sql stable security definer set search_path = '' as $$
   select rol from public.perfiles where user_id = (select auth.uid())
 $$;
 
-create function public.es_admin() returns boolean
+create function public.tiene_acceso() returns boolean
 language sql stable security definer set search_path = '' as $$
-  select coalesce(public.rol_actual() in ('admin','dev'), false)
+  select public.rol_actual() is not null
 $$;
 
-revoke execute on function public.rol_actual(), public.es_admin() from anon, public;
-grant  execute on function public.rol_actual(), public.es_admin() to authenticated;
+revoke execute on function public.rol_actual(), public.tiene_acceso() from anon, public;
+grant  execute on function public.rol_actual(), public.tiene_acceso() to authenticated;
 ```
 
 ## Políticas RLS
 
-Regla general: RLS activada en **todas** las tablas. `anon` no tiene ninguna política. La familia no tiene ninguna política sobre tablas base: solo lee por RPC.
+Regla general: RLS activada en **todas** las tablas. `anon` no tiene ninguna política. Un usuario de Auth sin fila en `perfiles` no ve nada.
 
 ```sql
 alter table public.<tabla> enable row level security;   -- para cada tabla
 
 -- Tablas de negocio: categorias, proveedores, productos, alias_producto, facturas,
--- factura_items, fraccionamientos. Solo admin y dev, lectura y escritura.
-create policy admin_todo on public.<tabla>
+-- factura_items, fraccionamientos. Cualquier usuario con perfil: lectura y escritura.
+create policy con_perfil_todo on public.<tabla>
   for all to authenticated
-  using ((select public.es_admin()))
-  with check ((select public.es_admin()));
+  using ((select public.tiene_acceso()))
+  with check ((select public.tiene_acceso()));
 
 -- historial_precios: se agrega y se lee, nunca se edita ni se borra.
-create policy admin_lee on public.historial_precios
-  for select to authenticated using ((select public.es_admin()));
-create policy admin_agrega on public.historial_precios
-  for insert to authenticated with check ((select public.es_admin()));
+create policy con_perfil_lee on public.historial_precios
+  for select to authenticated using ((select public.tiene_acceso()));
+create policy con_perfil_agrega on public.historial_precios
+  for insert to authenticated with check ((select public.tiene_acceso()));
 
--- perfiles: cada uno lee su fila (la app necesita saber su rol). Altas solo desde el dashboard.
-create policy lee_propio on public.perfiles
-  for select to authenticated using (user_id = (select auth.uid()));
-create policy admin_lee_todos on public.perfiles
-  for select to authenticated using ((select public.es_admin()));
+-- perfiles: lectura para usuarios con perfil (la app necesita saber quién es). Altas solo desde el dashboard.
+create policy con_perfil_lee on public.perfiles
+  for select to authenticated using ((select public.tiene_acceso()));
 ```
 
-| Tabla / función | admin | dev | familia | anon |
-|---|---|---|---|---|
-| categorias, proveedores, productos, alias_producto, facturas, factura_items, fraccionamientos | leer/escribir | leer/escribir | — | — |
-| historial_precios | leer/agregar | leer/agregar | — | — |
-| perfiles | leer | leer | leer la propia | — |
-| `lista_precios()`, `lista_rubros()` | sí | sí | sí | — |
-| `confirmar_factura()`, `aplicar_precios()`, `eliminar_rubro()` | sí | sí | — | — |
-| Storage `facturas` | subir/leer | subir/leer | — | — |
+| Tabla / función | admin · dev · familia | anon o sin perfil |
+|---|---|---|
+| categorias, proveedores, productos, alias_producto, facturas, factura_items, fraccionamientos | leer/escribir | — |
+| historial_precios | leer/agregar (nunca editar ni borrar) | — |
+| perfiles | leer | — |
+| `lista_precios()`, `confirmar_factura()`, `aplicar_precios()`, `eliminar_rubro()` | sí | — |
+| Storage `facturas` | subir/leer | — |
 
-### RPC de lectura (familia y admin)
+### RPC de sincronización
 
-```sql
-create function public.lista_precios(desde timestamptz default null)
-returns table (
-  id bigint, nombre text, categoria_id bigint, modo_venta public.modo_venta,
-  precio_venta integer, precio_100g integer, precio_actualizado_en timestamptz,
-  alias text[], activo boolean, actualizado_en timestamptz
-)
-language sql stable security definer set search_path = '' as $$
-  select p.id, p.nombre, p.categoria_id, p.modo_venta,
-         p.precio_venta, p.precio_100g, p.precio_actualizado_en,
-         coalesce(array_agg(a.texto_original) filter (where a.id is not null), '{}'),
-         p.activo, p.actualizado_en
-  from public.productos p
-  left join public.alias_producto a on a.producto_id = p.id
-  where public.rol_actual() is not null
-    and (desde is null or p.actualizado_en > desde)
-  group by p.id
-$$;
-```
+`lista_precios(desde timestamptz default null)` (`security invoker`, aplica RLS) devuelve los productos cambiados desde `desde`, con sus alias agregados en un `text[]`, para la base local del celular: `id, nombre, categoria_id, modo_venta, precio_fijo, costo_unitario, precio_venta, precio_100g, costo_actualizado_en, precio_actualizado_en, ultima_compra_fecha, ultimo_proveedor_id, alias, activo, actualizado_en`. Los rubros y proveedores se leen directo de sus tablas (son pocos). `revoke ... from anon, public; grant ... to authenticated`.
 
-`lista_rubros()` devuelve `id, nombre, orden` (sin margen). Ambas: `revoke ... from anon, public; grant ... to authenticated`. Ningún campo de costo, margen ni proveedor sale por estas funciones; el reviewer lo verifica en cada cambio.
+### RPC de escritura (`security invoker`: aplica RLS)
 
-### RPC de escritura (solo admin/dev, `security invoker`: aplica RLS)
-
-- `confirmar_factura(p_factura uuid, p_cabecera jsonb, p_renglones jsonb)`: en una transacción crea el proveedor si es nuevo, crea los productos nuevos, guarda o actualiza los alias, escribe costo y precio calculados en el cliente, copia proveedor y fecha a cada renglón, inserta historial y pasa la factura a `confirmada`. Si la factura ya está confirmada, no hace nada (idempotente).
+- `confirmar_factura(p_factura uuid, p_cabecera jsonb, p_renglones jsonb)`: en una transacción crea el proveedor si es nuevo (solo nombre y CUIT), crea los productos nuevos, guarda o actualiza los alias, guarda todos los renglones con proveedor y fecha copiados y pasa la factura a `confirmada`. Para cada producto: si `ultima_compra_fecha` es posterior a la fecha de la factura (factura vieja, D12), **no** toca costo ni precio; si no, escribe costo y precio calculados en el cliente, actualiza `ultima_compra_fecha` e inserta historial. Si la factura ya está confirmada, no hace nada (idempotente). La regla de factura vieja se repite en la base a propósito: protege aunque dos personas confirmen a la vez.
 - `aplicar_precios(p_cambios jsonb, p_origen public.origen_cambio)`: recibe `[{producto_id, precio_venta, precio_100g, costo_unitario, margen_pct}]`, actualiza e inserta historial. Se usa para recalcular un rubro, cambiar de rubro y editar a mano.
 - `eliminar_rubro(p_rubro bigint, p_destino bigint)`: mueve los productos al destino (o a "Sin categoría") y borra el rubro. No recalcula: si hay que recalcular, el cliente llama después a `aplicar_precios`.
 
 ### Storage
 
-Bucket privado `facturas`. Ruta: `{anio}/{mes}/{factura_id}.{webp|jpg|pdf}`. Políticas sobre `storage.objects` con `bucket_id = 'facturas' and (select public.es_admin())` para `insert` y `select`. Sin `update` ni `delete` desde el cliente.
+Bucket privado `facturas`. Ruta: `{anio}/{mes}/{factura_id}.{webp|jpg|pdf}`. Políticas sobre `storage.objects` con `bucket_id = 'facturas' and (select public.tiene_acceso())` para `insert` y `select`. Sin `update` ni `delete` desde el cliente.
 
 ### Edge Function y cron
 
-- `extraer-factura` verifica el JWT y que el rol sea admin/dev, o un header `x-cron-secret` cuando la llama pg_cron. Usa `service_role` solo dentro de la función para leer el archivo y escribir el resultado.
+- `extraer-factura` verifica el JWT y que el usuario tenga perfil, o un header `x-cron-secret` cuando la llama pg_cron. Usa `service_role` solo dentro de la función para leer el archivo y escribir el resultado.
 - `pg_cron` cada 2 minutos: toma facturas `en_cola` con `proximo_intento_en <= now()` (máximo 5 por vuelta) y llama a la función con `pg_net`. Backoff: 1, 2, 5, 15, 60 minutos; después de 8 intentos pasa a `error` y aparece en la app con la opción "Cargar a mano".
 
 ## Cuentas
@@ -272,7 +254,7 @@ Bucket privado `facturas`. Ruta: `{anio}/{mes}/{factura_id}.{webp|jpg|pdf}`. Pol
 |---|---|---|
 | La dueña | `admin` | Email + contraseña una sola vez; la sesión queda abierta en su celular. |
 | Vos | `dev` | Email + contraseña. |
-| Familia | `familia` | Una cuenta compartida (`familia@…`) cuya contraseña es el PIN de 6 dígitos. La pantalla de ingreso solo pide el PIN. |
+| Familia | `familia` | Una cuenta compartida (`familia@…`) cuya contraseña es el PIN de 6 dígitos. La pantalla de ingreso solo pide el PIN. Mismos permisos que `admin` (D5). |
 
 ## Fase 2 (solo previsto, no se crea ahora)
 
@@ -282,4 +264,4 @@ Bucket privado `facturas`. Ruta: `{anio}/{mes}/{factura_id}.{webp|jpg|pdf}`. Pol
 - `movimientos_stock (producto_id, cantidad ±, tipo: compra|venta|ajuste|conteo, referencia, fecha)`: el stock es la suma; las compras confirmadas de fase 1 se migran como movimientos tipo `compra` posteriores al conteo inicial.
 - `conteos (id, fecha, tipo: inicial|control)` + `conteo_items (conteo_id, producto_id, cantidad)`.
 - `productos.stock_minimo numeric null`.
-- Se agregan políticas: la familia podrá insertar ventas (fase 2 lo pide), nunca leer costos.
+- Las tablas nuevas usan las mismas políticas `tiene_acceso()`.

@@ -1,6 +1,6 @@
 # AGENTS.md — El Cuaderno
 
-PWA para un almacén de barrio en Mar del Plata: carga de facturas de proveedores (foto, PDF o manual), cálculo de costos y precios de venta, y consulta de precios offline para la familia. Lo usa una sola persona que atiende sola: **todo tiene que ser más rápido que hoy; ante la duda, menos pasos y botones grandes.**
+PWA para un almacén de barrio en Mar del Plata: carga de facturas de proveedores (foto, PDF o manual), cálculo de costos y precios de venta, y consulta de precios offline. La usan la dueña y su familia mientras atienden el mostrador: **todo tiene que ser más rápido que hoy; ante la duda, menos pasos y botones grandes.**
 
 ## Stack y estructura
 - React + Vite + TypeScript (PWA con vite-plugin-pwa), Dexie (IndexedDB), MiniSearch. Deploy en Vercel.
@@ -17,8 +17,8 @@ PWA para un almacén de barrio en Mar del Plata: carga de facturas de proveedore
 ## Reglas de dominio (fácil equivocarse)
 - Una sola lógica de precios: `src/dominio/precios.ts`. La base no calcula precios; la UI tampoco. Ver skill `reglas-precios`.
 - Redondeo a la decena, el 5 va hacia arriba (115 → 120). Calcular con enteros, nunca `Math.round(costo * 1.15)`.
-- Recalcular un rubro o cargar una factura **pisa** los precios editados a mano. Solo "precio fijo" (rubro o producto) nunca se recalcula.
-- La familia nunca ve costos, márgenes ni proveedores: solo accede por las RPC `lista_precios` y `lista_rubros`. Ver skill `supabase-rls`.
+- Recalcular un rubro o cargar una factura **pisa** los precios editados a mano. Solo "precio fijo" (rubro o producto) nunca se recalcula. Una factura más vieja que la última compra de un producto no le cambia costo ni precio.
+- Familia, admin y dev tienen **los mismos permisos** (familia entra con PIN compartido). `anon` no accede a nada. Ver skill `supabase-rls`.
 - La API key de Gemini vive solo en secretos de Supabase. Jamás en el cliente ni en el repo.
 - No mostrar "stock" en la interfaz de la fase 1.
 
@@ -33,4 +33,5 @@ PWA para un almacén de barrio en Mar del Plata: carga de facturas de proveedore
 - 🚫 Nunca: secretos en el código, `service_role` en el cliente, desactivar RLS, inventar requisitos, mostrar stock en fase 1.
 
 ## Verificación
-- `npm run test && npm run typecheck && npm run lint`. UI: Chrome DevTools MCP en vista móvil 360 px, modo offline incluido. RLS: probar como `familia` y como `admin`.
+- `npm run test && npm run typecheck && npm run lint`. UI: Chrome DevTools MCP en vista móvil 360 px, modo offline incluido. RLS: probar con sesión (todo permitido) y sin sesión (todo rechazado).
+- Entorno: Node 22 LTS (la Mac de desarrollo tiene Monterey; Node 24 no corre). Supabase CLI con `npx supabase`, sin Docker.

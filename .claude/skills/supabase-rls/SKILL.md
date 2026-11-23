@@ -1,6 +1,6 @@
 ---
 name: supabase-rls
-description: Úsala siempre que escribas o revises migraciones, tablas, políticas RLS, funciones RPC, Storage, Edge Functions o consultas de Supabase en El Cuaderno, o cuando algo dependa del rol (admin, dev, familia).
+description: Úsala siempre que escribas o revises migraciones, tablas, políticas RLS, funciones RPC, Storage, Edge Functions o consultas de Supabase en El Cuaderno, o cuando algo dependa de quién está logueado.
 ---
 
 # Supabase y seguridad por rol
@@ -11,8 +11,9 @@ Referencia: `docs/modelo-datos.md`. Si una migración se aparta del documento, p
 - Todo cambio de esquema es un archivo nuevo en `supabase/migrations/` (`supabase migration new <nombre>`). Nunca editar una migración ya aplicada.
 - Migraciones sin pérdida de datos: nada de `drop table` ni `drop column` sobre datos reales sin pregunta explícita.
 - `enable row level security` en **toda** tabla nueva, en la misma migración que la crea.
-- Políticas con `(select public.es_admin())` (entre paréntesis con `select`, para que Postgres la evalúe una vez).
-- `anon` no tiene políticas. La familia no tiene políticas sobre tablas de negocio: solo lee con `lista_precios` y `lista_rubros`.
+- Políticas con `(select public.tiene_acceso())` (entre paréntesis con `select`, para que Postgres la evalúe una vez).
+- Los tres roles (`admin`, `dev`, `familia`) tienen los mismos permisos (D5). `anon` y los usuarios sin perfil no tienen acceso a nada. El rol se guarda para saber quién hizo cada cambio, no para restringir.
+- `historial_precios` y los `factura_items` confirmados no se editan ni se borran (son la base de la fase 3).
 - Funciones `security definer` siempre con `set search_path = ''`, nombres calificados (`public.tabla`), `revoke execute ... from anon, public` y `grant ... to authenticated`.
 - RPC de escritura `security invoker`, atómicas e idempotentes (repetir la llamada no duplica).
 - El cliente usa la clave publicable. `service_role` solo dentro de Edge Functions.
@@ -24,17 +25,16 @@ Referencia: `docs/modelo-datos.md`. Si una migración se aparta del documento, p
 ```sql
 begin;
 set local role authenticated;
-set local request.jwt.claims = '{"sub":"<uuid-familia>","role":"authenticated"}';
+set local request.jwt.claims = '{"sub":"<uuid-sin-perfil>","role":"authenticated"}';
 select count(*) from public.productos;          -- esperado: 0
-select * from public.lista_precios() limit 1;   -- esperado: filas, sin columnas de costo
 insert into public.categorias (nombre, margen_pct) values ('x', 1);  -- esperado: error
 rollback;
 ```
-Repetir con el uuid de admin (todo permitido) y sin `sub` (todo falla). Guardar el script en `supabase/tests/`.
+Repetir con `set local role anon` (todo falla) y con el uuid de cada rol con perfil (todo permitido). Guardar el script en `supabase/tests/`.
 
 ## Checklist
 - [ ] ¿RLS activa en todas las tablas nuevas?
 - [ ] ¿Alguna política `to anon` o `using (true)`?
-- [ ] ¿`lista_precios` sigue sin costo, margen, proveedor ni alias de otro rol?
+- [ ] ¿Un usuario sin perfil o `anon` puede leer o escribir algo?
 - [ ] ¿Funciones definer con `search_path = ''` y `revoke` a `anon`?
 - [ ] ¿Tipos regenerados y `get_advisors` sin alertas?

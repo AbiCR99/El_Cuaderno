@@ -5,7 +5,7 @@ Estado: borrador
 Con la inflación, la administradora ajusta márgenes por rubro. Cambiar un margen tiene que actualizar todos los precios del rubro de una vez, con una confirmación clara.
 
 ## Usuarios
-Administradora.
+Administradora y familia (mismos permisos, D5).
 
 ## Historias de usuario
 - HU-1. Como administradora quiero subir el margen de Lácteos y que se actualicen todos los lácteos.

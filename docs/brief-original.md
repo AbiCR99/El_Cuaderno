@@ -2,6 +2,8 @@
 
 Copia del encargo inicial, sin cambios de alcance. Las decisiones posteriores están en `MEMORY.md` y `docs/riesgos-y-preguntas.md`; si contradicen este archivo, mandan ellas.
 
+> **Cambio importante posterior (D5):** la familia ya **no** es solo consulta. Tiene los mismos permisos que la administradora: ve costos, carga facturas y edita precios. Lo que dice abajo sobre la familia quedó superado.
+
 ## Contexto
 
 - Almacén de barrio en Mar del Plata. Compra en cantidades chicas (6 paquetes de galletitas, 3 de shampoo) y recibe **entre 35 y 42 facturas de proveedores por semana**.

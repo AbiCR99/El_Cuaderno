@@ -1,6 +1,6 @@
 ---
 name: reglas-precios
-description: Úsala siempre que escribas, modifiques o revises código que calcule o muestre costos, IVA, bultos, bonificaciones, márgenes, redondeo, precio fijo, fraccionados o variación de costo en El Cuaderno, incluida la pantalla de revisión, Porcentajes y la ficha de producto.
+description: Úsala siempre que escribas, modifiques o revises código que calcule o muestre costos, IVA, bultos, bonificaciones, unidades de regalo, facturas viejas, márgenes, redondeo, precio fijo, fraccionados o variación de costo en El Cuaderno, incluida la pantalla de revisión, Porcentajes y la ficha de producto.
 ---
 
 # Reglas de costos y precios
@@ -20,6 +20,12 @@ Esta es la regla de negocio central. Una sola implementación en `src/dominio/` 
 4. Si el **precio fijo es efectivo** (producto o rubro): no hay precio sugerido.
 5. Si no: `precio = redondearDecena(costoUnitario, margenPct)`.
 
+## Unidades de regalo (D17)
+Un renglón con costo 0 (precio $0 o bonificación 100 %) se une al renglón pago del **mismo producto** en la misma factura: `costoUnitario = costoRenglonesPagos / (unidadesPagas + unidadesRegalo)`. Si no hay renglón pago de ese producto: "regalo sin compra", sin costo ni precio sugerido (renglón amarillo, P15).
+
+## Descuentos generales (D13)
+Los descuentos al pie de la factura se ignoran. Solo cuentan las bonificaciones de cada renglón.
+
 ## Redondeo (decisión D2: el 5 va hacia arriba)
 Nunca `Math.round(costo * 1.15)`: `100 * 1.15` da `114.99999999999999` y redondea a 110. Calcular con enteros:
 
@@ -35,7 +41,8 @@ return decenas * 10;
 ## Recalcular pisa lo manual (decisión D1)
 - Cambiar el margen de un rubro recalcula **todos** sus productos con costo y sin precio fijo efectivo, aunque tengan un precio editado a mano.
 - Confirmar una factura reemplaza el precio por el que muestra la revisión.
-- Precio fijo: se guarda el costo; el precio solo cambia si ella lo escribe.
+- Precio fijo: se guarda el costo; el precio solo cambia si alguien lo escribe.
+- **Factura vieja (D12):** si la fecha de la factura es anterior a `ultima_compra_fecha` del producto, la compra se guarda pero no cambia costo ni precio. Misma fecha no es vieja.
 
 ## Variación de costo
 `variacion = round((costoNuevo − costoAnterior) / costoAnterior × 100)` → "+12 %", "−3 %". Sin compra anterior o costo anterior 0: sin variación.
@@ -57,7 +64,10 @@ return decenas * 10;
 | bulto $10.000 × 1, 24 u, sin IVA, 21 % | costo 504,17 |
 | alícuota 10,5 % sin IVA, neto 1000, 1 u | costo 1105,00 |
 | bonif 10 % sobre 2 × $1.000 | neto 1800 |
-| bonif 100 % (unidad de regalo) | costo 0 → renglón amarillo, sin precio sugerido (P14) |
+| 1 bulto $12.000 × 24 u + renglón regalo 2 u, con IVA | costo 461,54 (12.000 ÷ 26) |
+| regalo sin renglón pago del mismo producto | sin costo ni precio, amarillo (P15) |
+| factura del 10/11, última compra del 12/11 | no cambia costo ni precio |
+| factura del 12/11, última compra del 12/11 | sí cambia |
 | neto negativo | error de validación |
 | precio calculado menor a 5 | 0 → renglón amarillo, no sugerir $0 |
 | precio fijo efectivo | sin sugerencia |
@@ -68,6 +78,8 @@ return decenas * 10;
 - [ ] ¿Se respeta el precio fijo del **rubro** además del del producto?
 - [ ] ¿El IVA se suma solo cuando la factura es "sin IVA"?
 - [ ] ¿La bonificación se resta antes de sumar IVA?
+- [ ] ¿Los regalos se unen solo con el mismo producto de la misma factura?
+- [ ] ¿Una factura vieja deja intactos costo y precio?
 - [ ] ¿Todo cambio de costo o precio deja historial con su origen?
 
 ## Al terminar

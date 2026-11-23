@@ -18,27 +18,27 @@ Ingreso ─┬─ admin/dev ─→ Inicio ─┬─ Subir productos ─┬─ C�
          │                       │                   ├─ Manual ─┬─ Repetir última compra ─→ Revisión
          │                       │                   │          ├─ Cargar renglones ─→ Revisión
          │                       │                   │          └─ Fraccionado ─→ Revisión
-         │                       │                   └─ Porcentajes ─→ Editar rubro / Nuevo rubro
-         │                       └─ Precios ─→ Ficha de producto (admin)
-         └─ familia ───→ Precios (solo lectura)
+         │                       │                   ├─ Porcentajes ─→ Editar rubro / Nuevo rubro
+         │                       │                   └─ Proveedores ─→ Editar proveedor
+         │                       └─ Precios ─→ Ficha de producto
+         └─ familia ───→ Inicio (mismos permisos, D5)
 ```
 
 ## 1. Ingreso
 
 - **Primera vez en el dispositivo:** dos botones grandes: "Soy la administradora" (email + contraseña) y "Familia" (teclado numérico de 6 dígitos).
-- **Después:** la sesión queda abierta; la app abre directo en Inicio (admin) o Precios (familia).
+- **Después:** la sesión queda abierta; la app abre directo en Inicio. La familia ve y puede hacer lo mismo que la administradora (D5).
 - **Estados:** cargando ("Entrando…"); error de PIN ("PIN incorrecto"), sin revelar si existe la cuenta; sin conexión en el primer ingreso ("Necesitás internet la primera vez").
-- **[propuesta]** "Salir" disponible desde un menú chico en la esquina, para poder pasar un celular de admin a familia.
 
-## 2. Inicio (admin)
+## 2. Inicio
 
 - Dos botones grandes: **Subir productos** y **Precios**.
-- **[propuesta]** Encima de los botones, solo si hay algo: aviso "Tenés 2 facturas para revisar" (toca y abre la primera) y "1 factura esperando conexión" / "1 factura no se pudo leer". Sin este aviso, una factura procesada en segundo plano quedaría invisible.
+- Encima de los botones, solo si hay algo (D10): "Tenés 2 facturas para revisar" (toca y abre la primera), "1 factura esperando conexión", "1 factura no se pudo leer".
 - **Vacío:** solo los dos botones.
 
 ## 3. Subir productos
 
-Cuatro botones grandes: **Cámara**, **Subir PDF**, **Manual**, **Porcentajes**.
+Tres botones grandes de carga, uno debajo del otro: **Cámara**, **Subir PDF**, **Manual**. Abajo, dos botones más chicos lado a lado: **Porcentajes** y **Proveedores** (D8). **[propuesta P16]**
 
 ### 3a. Cámara
 1. Abre la cámara del sistema (`<input type="file" accept="image/*" capture="environment">`).
@@ -46,24 +46,29 @@ Cuatro botones grandes: **Cámara**, **Subir PDF**, **Manual**, **Porcentajes**.
 3. Con conexión: en 5–20 s abre la Revisión. Si tarda más de 20 s: "Sigue leyendo. Podés seguir con otra cosa; te aviso en Inicio."
 4. Sin conexión o 429: "Guardada. La leo apenas haya conexión." y vuelve a Inicio. Botón secundario "Cargar a mano ahora".
 5. Error de lectura: "No pude leer esta foto." con "Sacar otra" y "Cargar a mano".
-- **[propuesta]** "Agregar otra hoja" antes de enviar, para facturas de más de una página.
 
 ### 3b. Subir PDF
 Selector de archivos (`accept="application/pdf"`). Igual que la cámara desde el paso 2. Mensaje si el PDF no se puede abrir: "Este PDF no se puede abrir. ¿Probás con una foto?".
 
 ### 3c. Manual
 1. Elegir proveedor: buscador + proveedores recientes como botones. "Proveedor nuevo" pide solo el nombre.
-2. Tres botones: **Repetir última compra** (deshabilitado con leyenda si ese proveedor no tiene compras), **Cargar renglones**, **Fraccionado**.
+2. Tres botones: **Cargar renglones**, **Fraccionado** y, más chico, **Repetir última compra** (se usa poco, D9; deshabilitado con leyenda si ese proveedor no tiene compras).
 3. **Cargar renglones:** por renglón, producto (buscador del catálogo o "nuevo"), packs, unidades por pack, precio del pack, bonificación. Teclado numérico. Termina en la Revisión.
 4. **Fraccionado:** ver spec 007. Termina en la Revisión.
-- **[propuesta]** La ubicación de "Repetir última compra" dentro de Manual.
 
 ### 3d. Porcentajes
 Lista de rubros con su margen ("Lácteos · 18 %", "Cigarrillos · precio fijo"). Tocar abre edición: nombre, margen o "precio fijo", y "Eliminar rubro". Botón "Nuevo rubro". Ver spec 005.
 
+### 3e. Proveedores
+Lista alfabética ("La Serenísima · pide lun · entrega mié"; "Distribuidora X · sin días"). Tocar abre edición: nombre y días de pedido y de entrega (chips L M M J V S D). Botón "Nuevo proveedor". Los proveedores también se crean solos desde la revisión, solo con el nombre. Ver spec 008.
+
 ## 4. Revisión (componente único)
 
-**Cabecera:** proveedor (amarillo si es nuevo o no se reconoció), fecha, tipo, botón **con IVA / sin IVA** (preseleccionado si Gemini lo sugirió; sin elegir y amarillo si dudó). **[propuesta]** Para proveedores nuevos, campos opcionales "Días de pedido" y "Días de entrega" (chips L M M J V S D) que no bloquean.
+**Cabecera:** proveedor (amarillo si es nuevo o no se reconoció), fecha, tipo, botón **Precios con IVA / Precios sin IVA (se suma)** (preseleccionado si Gemini lo sugirió; sin elegir y amarillo si dudó).
+
+**Avisos amarillos de cabecera que no bloquean (D12):**
+- "Esta factura ya se cargó el 12/11 (mismo proveedor y número)."
+- "Factura vieja: 3 productos tienen una compra más nueva. Se guarda la compra pero no cambia su precio." Esos renglones muestran "Hay una compra del 20/11: el precio no cambia" en lugar del precio sugerido.
 
 **Renglón (tarjeta):**
 ```
@@ -75,6 +80,7 @@ Lista de rubros con su margen ("Lácteos · 18 %", "Cigarrillos · precio fijo")
 - Amarillo con el motivo arriba ("Producto nuevo", "No se leyó bien: precio borroso", "El importe no coincide").
 - Tocar un renglón amarillo abre su edición: emparejar con producto existente (candidatos) o crear nuevo (nombre prellenado, rubro sugerido), corregir números, elegir rubro.
 - Precio fijo: muestra el costo y el precio actual sin sugerencia; si el producto es nuevo, el precio es obligatorio y el renglón queda amarillo hasta cargarlo.
+- Unidades de regalo (renglón a $0 o con 100 % de bonificación): se muestran unidas al renglón pago del mismo producto ("24 + 2 de regalo = 26 unidades") y bajan el costo (D17). Regalo de un producto que no viene pago en la factura: amarillo (P15).
 - El precio siempre es editable. Editarlo no cambia el color.
 
 **Pie:** "Confirmar todo" (deshabilitado mientras quede amarillo, con el texto "Faltan 2 renglones"). "Descartar factura" en un menú secundario, con confirmación.
@@ -99,11 +105,11 @@ Galletitas · hace 3 días
 ```
 Fraccionados: "Maní · bolsita 100 g · $350" o "Maní · $3.200 el kg · $320 los 100 g".
 
-**Admin, tocar una tarjeta:** ficha con costo, margen del rubro, último proveedor, historial (últimos 10 cambios), editar precio, cambiar de rubro (pregunta si recalcula), marcar precio fijo. **Familia:** tocar no hace nada.
+**Tocar una tarjeta** (cualquier usuario, D5): ficha con costo, margen del rubro, último proveedor, historial (últimos 10 cambios), editar precio, cambiar de rubro (pregunta si recalcula), marcar precio fijo.
 
 **Estados:**
 - Sin resultados: "No encontré «galletits». Probá con otras letras o elegí un rubro."
-- Catálogo vacío (primer uso): "Todavía no hay productos. Se cargan solos con las facturas." (admin: botón "Subir productos").
+- Catálogo vacío (primer uso): "Todavía no hay productos. Se cargan solos con las facturas." con botón "Subir productos".
 - Offline: funciona igual; arriba, discreto: "Sin conexión · precios del 21/11 18:40".
 - Primera sincronización: "Descargando precios…" con barra.
 - Error de sincronización: se siguen mostrando los precios guardados y el aviso de fecha.

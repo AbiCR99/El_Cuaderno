@@ -1,16 +1,16 @@
-# Spec 006 — Consulta de precios offline (admin y familia)
+# Spec 006 — Consulta de precios offline y ficha de producto
 Estado: borrador
 
 ## Contexto y objetivo
-Hoy la familia no sabe los precios cuando atiende. Esta pantalla les da el precio en segundos, aunque no haya señal en el almacén. Es la misma pantalla para la administradora, que además puede editar.
+Hoy la familia no sabe los precios cuando atiende. Esta pantalla les da el precio en segundos, aunque no haya señal en el almacén. Todos los usuarios ven lo mismo y pueden editar (D5).
 
 ## Usuarios
-Familia (solo lectura), administradora.
+Familia y administradora, con los mismos permisos (D5).
 
 ## Historias de usuario
 - HU-1. Como familiar quiero escribir "oreo" o "galle" y ver el precio.
 - HU-2. Como familiar quiero ver todos los lácteos sin escribir nada.
-- HU-3. Como administradora quiero corregir un precio desde la consulta.
+- HU-3. Como administradora o familiar quiero corregir un precio desde la consulta.
 
 ## Requisitos funcionales
 - RF-1: EL SISTEMA encuentra productos a partir de 2 letras, sin distinguir mayúsculas ni tildes, buscando en nombre y alias.
@@ -23,12 +23,13 @@ Familia (solo lectura), administradora.
 - RF-8: EL SISTEMA guarda la lista de precios en el dispositivo y funciona sin conexión.
 - RF-9: CUANDO hay conexión al abrir la app, al volver a ella o cada 5 minutos con la app abierta, EL SISTEMA descarga solo los cambios desde la última sincronización.
 - RF-10: MIENTRAS no hay conexión, EL SISTEMA muestra "Sin conexión · precios del {fecha y hora}".
-- RF-11: MIENTRAS la sesión es `familia`, EL SISTEMA no muestra costos, márgenes, proveedores ni controles de edición, y tocar un producto no hace nada.
-- RF-12: CUANDO la administradora toca un producto, EL SISTEMA abre su ficha con costo, margen, último proveedor, últimos 10 cambios de precio, edición de precio, cambio de rubro y marca de precio fijo.
-- RF-13: CUANDO la administradora edita un precio, EL SISTEMA lo guarda con historial de origen `manual` (hasta el próximo recálculo, D1).
+- RF-11: EL SISTEMA guarda en el dispositivo también el costo, el último proveedor y la última fecha de compra, para que la ficha funcione sin conexión (solo lectura offline).
+- RF-12: CUANDO un usuario toca un producto, EL SISTEMA abre su ficha con costo, margen, último proveedor, últimos 10 cambios de precio, edición de precio, cambio de rubro y marca de precio fijo.
+- RF-13: CUANDO un usuario edita un precio con conexión, EL SISTEMA lo guarda con historial de origen `manual` (hasta el próximo recálculo, D1).
 - RF-14: SI la búsqueda no encuentra nada, ENTONCES EL SISTEMA muestra "No encontré «texto». Probá con otras letras o elegí un rubro."
 - RF-15: SI el catálogo está vacío, ENTONCES EL SISTEMA muestra "Todavía no hay productos. Se cargan solos con las facturas."
 - RF-16: EL SISTEMA no muestra productos desactivados.
+- RF-17: SI no hay conexión, ENTONCES EL SISTEMA muestra la ficha en modo lectura y avisa "Necesitás conexión para cambiar precios".
 
 ## Requisitos no funcionales
 - Resultados en menos de 100 ms por tecla con 2.000 productos en un Android de gama baja.
@@ -46,8 +47,7 @@ Familia (solo lectura), administradora.
 
 ## Criterios de finalización
 - Tests de búsqueda (normalización, prefijo, tipeo, filtro por rubro).
-- Demo en Android con modo avión, como familia y como admin.
-- Verificado con Chrome DevTools que la respuesta de `lista_precios` no trae costos.
+- Demo en Android con modo avión, entrando con PIN y con email.
 
 ## Dudas abiertas
 - (ninguna)

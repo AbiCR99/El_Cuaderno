@@ -7,7 +7,7 @@ Se construye para la visita (~1 mes). Esta página solo deja anotado lo que la f
 - Historial completo de compras con producto, proveedor, fecha, pack, cantidad de packs y costo unitario (`factura_items` confirmados).
 - Días de pedido y entrega de cada proveedor.
 - `productos.modo_venta` (unidad, fracción, peso) para que la venta sepa cómo cobrar.
-- Rol `familia` y `lista_precios` offline: la misma base sirve para la pantalla de venta.
+- `lista_precios` offline y el PIN de la familia: la misma base y el mismo acceso sirven para la pantalla de venta.
 
 ## A construir
 

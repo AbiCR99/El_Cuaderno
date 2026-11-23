@@ -1,6 +1,6 @@
 # El Cuaderno
 
-PWA para un almacén de barrio: carga de facturas de proveedores (foto, PDF o manual), costos y precios de venta automáticos, y consulta de precios offline para la familia.
+PWA para un almacén de barrio: carga de facturas de proveedores (foto, PDF o manual), costos y precios de venta automáticos, y consulta de precios offline. La usan la dueña y su familia.
 
 **Estado:** fase 1 en planificación. Todavía no hay código de la aplicación.
 
@@ -14,6 +14,9 @@ PWA para un almacén de barrio: carga de facturas de proveedores (foto, PDF o ma
 - `CLAUDE.md` importa `AGENTS.md` (reglas) y `MEMORY.md` (estado).
 - `/sdd-status` dice en qué punto está cada spec y qué comando sigue.
 - `/sdd-coordinar 001` corre el flujo completo de una spec con los subagentes `planner`, `implementer` y `reviewer`.
+
+## Requisitos
+Node 22 LTS (la Mac de desarrollo tiene Monterey; Node 24 no corre ahí). Supabase CLI con `npx supabase` (sin Docker).
 
 ## Variables de entorno
 Copiá `.env.example` a `.env.local` (no se sube al repo). Para los MCP, exportá en tu terminal `SUPABASE_PROJECT_REF_DEV` y, si tenés, `CONTEXT7_API_KEY`. Los secretos del servidor (`GEMINI_API_KEY`, `GEMINI_MODEL`, `CRON_SECRET`) van con `supabase secrets set`, nunca en archivos.
