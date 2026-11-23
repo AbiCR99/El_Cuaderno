@@ -23,13 +23,12 @@
 | D18 | 2026-11-23 | Precio que baja cuando baja el costo (antes P12) | Se sugiere el precio más bajo, con "antes $X" a la vista, y se aplica solo al confirmar (como cualquier precio de la revisión). Recalcular un rubro también pide confirmación. |
 | D19 | 2026-11-23 | Muestras gratis (antes P15) | No se venden. Un renglón de regalo de un producto que no viene pago en esa factura no se toma en cuenta: se muestra en gris "Muestra sin cargo: no se carga" y no crea producto, no guarda compra ni cambia costo. |
 | D20 | 2026-11-23 | Nombre del botón | "Porcentajes" pasa a llamarse **Rubros** (ahí se editan rubros y márgenes). |
+| D21 | 2026-11-23 | Botones de Subir productos (antes P16) | Cámara, Subir PDF y Manual grandes, uno debajo del otro; abajo, Rubros y Proveedores más chicos, lado a lado. |
 | D17 | 2026-11-23 | Unidades de regalo (antes P14) | Un renglón a $0 o con 100 % de bonificación ("llevás 12, pagás 10") suma sus unidades al mismo producto en la misma factura y baja su costo unitario. |
 
 ## Preguntas abiertas
 
-| # | Pregunta | Propuesta | Spec |
-|---|---|---|---|
-| P16 | Subir productos pasa a tener 5 botones (Cámara, Subir PDF, Manual, Rubros, Proveedores). | Los tres de carga grandes, uno debajo del otro; Rubros y Proveedores más chicos, lado a lado abajo. | 003/008 |
+Ninguna por ahora. Las nuevas se agregan acá como P17, P18…
 
 ## Riesgos
 

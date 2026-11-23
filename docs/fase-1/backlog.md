@@ -57,7 +57,7 @@ Tareas chicas (20–40 min con el agente), en orden de dependencia, cada una ver
 ## 008 · Proveedores
 - [ ] **T008-1. Pantalla Proveedores**: lista alfabética con días o "sin días", vacío y offline. RF-1, RF-5 a RF-7. — Hecho cuando: verificada en 360 px.
 - [ ] **T008-2. Crear y editar proveedor** con días L–D y control de nombre repetido. RF-2 a RF-4. — Hecho cuando: demo de HU-1.
-- [ ] **T008-3. Botón Proveedores en Subir productos** (disposición según P16). — Hecho cuando: Subir productos muestra los 5 botones.
+- [ ] **T008-3. Botón Proveedores en Subir productos** (disposición D21). — Hecho cuando: Subir productos muestra los 5 botones.
 
 ## 004 · Carga con Gemini
 - [ ] **T004-1. Set de prueba**: 15–20 facturas reales con su resultado esperado en `supabase/functions/extraer-factura/fixtures/` (sin datos personales). — Hecho cuando: está en el repo y revisado por vos.

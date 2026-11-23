@@ -4,7 +4,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resumí o eliminá lo 
 
 ## Estado actual
 - Fase 1 (costos y precios): entorno preparado, sin código todavía. Próximo paso: spec 001 (`/sdd-plan 001-base-y-acceso`).
-- Specs en borrador: 001 a 008. Backlog en `docs/fase-1/backlog.md`. Única pregunta abierta: P16 (disposición de los 5 botones).
+- Specs en borrador: 001 a 008. Backlog en `docs/fase-1/backlog.md`. Sin preguntas abiertas.
 
 ## Decisiones (y por qué) — detalle en `docs/riesgos-y-preguntas.md`
 - D1 · Precios editados a mano: **se pisan** al recalcular un rubro o al confirmar una factura. Solo "precio fijo" se respeta.
@@ -22,6 +22,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resumí o eliminá lo 
 - D18 · Si baja el costo, se sugiere el precio más bajo ("antes $X") y se aplica solo al confirmar.
 - D19 · Muestras gratis (regalo de un producto que no viene pago en la factura): no se toman en cuenta; renglón gris, no se guarda.
 - D20 · El botón "Porcentajes" se llama **Rubros**.
+- D21 · Subir productos: Cámara, PDF y Manual grandes; abajo Rubros y Proveedores chicos, lado a lado.
 - Cálculo de precios solo en `src/dominio/precios.ts`. La base recibe precios ya calculados por RPC atómicas.
 - Sin `margen_override` por producto: el escape es "precio fijo". Código de barras pasa a tabla propia en fase 2.
 

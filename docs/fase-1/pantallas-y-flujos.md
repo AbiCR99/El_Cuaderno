@@ -38,7 +38,7 @@ Ingreso ─┬─ admin/dev ─→ Inicio ─┬─ Subir productos ─┬─ C�
 
 ## 3. Subir productos
 
-Tres botones grandes de carga, uno debajo del otro: **Cámara**, **Subir PDF**, **Manual**. Abajo, dos botones más chicos lado a lado: **Rubros** (D20) y **Proveedores** (D8). **[propuesta P16]**
+Tres botones grandes de carga, uno debajo del otro: **Cámara**, **Subir PDF**, **Manual**. Abajo, dos botones más chicos lado a lado: **Rubros** (D20) y **Proveedores** (D8), según D21.
 
 ### 3a. Cámara
 1. Abre la cámara del sistema (`<input type="file" accept="image/*" capture="environment">`).

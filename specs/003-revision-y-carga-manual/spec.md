@@ -61,4 +61,4 @@ Administradora, familia y desarrolladora, con los mismos permisos (D5).
 - Demo en Android: factura nueva (todo amarillo) → confirmar → misma factura otra vez → todo verde, un toque.
 
 ## Dudas abiertas
-- [NECESITA ACLARACIÓN] P16 (disposición de los botones de Subir productos) de `docs/riesgos-y-preguntas.md`.
+- (ninguna)

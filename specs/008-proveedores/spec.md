@@ -33,4 +33,4 @@ Administradora y familia (mismos permisos, D5).
 - Demo: crear un proveedor, cargarle días, renombrarlo y verlo en la revisión de una factura.
 
 ## Dudas abiertas
-- [NECESITA ACLARACIÓN] P16 (ubicación del botón en Subir productos).
+- (ninguna: D21)
