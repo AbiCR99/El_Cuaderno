@@ -1,4 +1,4 @@
-# Spec 005 — Porcentajes: rubros y márgenes
+# Spec 005 — Rubros y márgenes
 Estado: borrador
 
 ## Contexto y objetivo
@@ -22,7 +22,7 @@ Administradora y familia (mismos permisos, D5).
 - RF-8: EL SISTEMA impide eliminar o renombrar "Sin categoría".
 - RF-9: CUANDO la administradora cambia un producto de rubro, EL SISTEMA pregunta "¿Recalcular con el margen de {rubro} (X %)? Precio nuevo: $Y".
 - RF-10: CUANDO la administradora marca o desmarca un rubro como precio fijo, EL SISTEMA no cambia precios; al desmarcar, pregunta si recalcular como en RF-2.
-- RF-11: SI no hay conexión, ENTONCES EL SISTEMA no permite editar rubros y muestra "Necesitás conexión para cambiar porcentajes".
+- RF-11: SI no hay conexión, ENTONCES EL SISTEMA no permite editar rubros y muestra "Necesitás conexión para cambiar rubros".
 
 ## Requisitos no funcionales
 - Recalcular 200 productos tarda menos de 3 s y es todo o nada.

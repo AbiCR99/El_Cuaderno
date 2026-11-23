@@ -111,6 +111,6 @@ Marcan el renglón en **amarillo** con un motivo visible:
 - Rubro "Sin categoría" en un producto nuevo → "Elegí el rubro".
 - Suma de importes con diferencia > 2 % contra `total_factura` → aviso en la cabecera (no bloquea).
 - `precios_incluyen_iva = "no_se"` → el botón con IVA / sin IVA aparece sin elegir y hay que tocarlo.
-- Renglón de regalo (precio 0 o bonificación 100 %) sin renglón pago del mismo producto → "Regalo sin compra" (D17, P15).
+- Renglón de regalo (precio 0 o bonificación 100 %) sin renglón pago del mismo producto → gris "Muestra sin cargo: no se carga" (D19); no se guarda.
 
 Avisos de cabecera (no bloquean, D12): factura repetida (mismo proveedor y número) y factura vieja (productos con una compra de fecha posterior). Por eso el prompt pide el número y la fecha con cuidado.

@@ -77,7 +77,7 @@ el_cuaderno/
 ├── src/
 │   ├── dominio/              # Lógica pura + *.test.ts: precios, iva, bultos, redondeo, fraccionados, normalizar, busqueda
 │   ├── datos/                # Cliente Supabase, tipos generados, Dexie (db local), sincronización, cola
-│   ├── pantallas/            # Inicio, SubirProductos, Revision, Manual, Porcentajes, Precios, Ingreso
+│   ├── pantallas/            # Inicio, SubirProductos, Revision, Manual, Rubros, Proveedores, Precios, Ingreso
 │   ├── componentes/          # BotonGrande, Renglon, Buscador, Aviso, EstadoVacio…
 │   └── estilos/
 └── supabase/

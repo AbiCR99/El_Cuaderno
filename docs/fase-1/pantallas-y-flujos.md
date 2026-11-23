@@ -18,7 +18,7 @@ Ingreso ─┬─ admin/dev ─→ Inicio ─┬─ Subir productos ─┬─ C�
          │                       │                   ├─ Manual ─┬─ Repetir última compra ─→ Revisión
          │                       │                   │          ├─ Cargar renglones ─→ Revisión
          │                       │                   │          └─ Fraccionado ─→ Revisión
-         │                       │                   ├─ Porcentajes ─→ Editar rubro / Nuevo rubro
+         │                       │                   ├─ Rubros ─→ Editar rubro / Nuevo rubro
          │                       │                   └─ Proveedores ─→ Editar proveedor
          │                       └─ Precios ─→ Ficha de producto
          └─ familia ───→ Inicio (mismos permisos, D5)
@@ -38,7 +38,7 @@ Ingreso ─┬─ admin/dev ─→ Inicio ─┬─ Subir productos ─┬─ C�
 
 ## 3. Subir productos
 
-Tres botones grandes de carga, uno debajo del otro: **Cámara**, **Subir PDF**, **Manual**. Abajo, dos botones más chicos lado a lado: **Porcentajes** y **Proveedores** (D8). **[propuesta P16]**
+Tres botones grandes de carga, uno debajo del otro: **Cámara**, **Subir PDF**, **Manual**. Abajo, dos botones más chicos lado a lado: **Rubros** (D20) y **Proveedores** (D8). **[propuesta P16]**
 
 ### 3a. Cámara
 1. Abre la cámara del sistema (`<input type="file" accept="image/*" capture="environment">`).
@@ -56,7 +56,7 @@ Selector de archivos (`accept="application/pdf"`). Igual que la cámara desde el
 3. **Cargar renglones:** por renglón, producto (buscador del catálogo o "nuevo"), packs, unidades por pack, precio del pack, bonificación. Teclado numérico. Termina en la Revisión.
 4. **Fraccionado:** ver spec 007. Termina en la Revisión.
 
-### 3d. Porcentajes
+### 3d. Rubros
 Lista de rubros con su margen ("Lácteos · 18 %", "Cigarrillos · precio fijo"). Tocar abre edición: nombre, margen o "precio fijo", y "Eliminar rubro". Botón "Nuevo rubro". Ver spec 005.
 
 ### 3e. Proveedores
@@ -80,7 +80,8 @@ Lista alfabética ("La Serenísima · pide lun · entrega mié"; "Distribuidora 
 - Amarillo con el motivo arriba ("Producto nuevo", "No se leyó bien: precio borroso", "El importe no coincide").
 - Tocar un renglón amarillo abre su edición: emparejar con producto existente (candidatos) o crear nuevo (nombre prellenado, rubro sugerido), corregir números, elegir rubro.
 - Precio fijo: muestra el costo y el precio actual sin sugerencia; si el producto es nuevo, el precio es obligatorio y el renglón queda amarillo hasta cargarlo.
-- Unidades de regalo (renglón a $0 o con 100 % de bonificación): se muestran unidas al renglón pago del mismo producto ("24 + 2 de regalo = 26 unidades") y bajan el costo (D17). Regalo de un producto que no viene pago en la factura: amarillo (P15).
+- Unidades de regalo (renglón a $0 o con 100 % de bonificación): se muestran unidas al renglón pago del mismo producto ("24 + 2 de regalo = 26 unidades") y bajan el costo (D17). Regalo de un producto que no viene pago en la factura (muestra gratis): renglón gris "Muestra sin cargo: no se carga", no se guarda (D19).
+- Si el costo bajó, el precio sugerido también baja y se ve "antes $X"; se aplica solo al confirmar (D18).
 - El precio siempre es editable. Editarlo no cambia el color.
 
 **Pie:** "Confirmar todo" (deshabilitado mientras quede amarillo, con el texto "Faltan 2 renglones"). "Descartar factura" en un menú secundario, con confirmación.

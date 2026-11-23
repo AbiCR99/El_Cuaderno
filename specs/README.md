@@ -8,7 +8,7 @@ Cada spec vive en `specs/NNN-nombre/` con `spec.md` (qué y por qué), `plan.md`
 | 002-motor-de-precios | Reglas de costo y precio, esquema y RLS | borrador | — | — |
 | 003-revision-y-carga-manual | Revisión, alias, manual, repetir compra | borrador | — | — |
 | 004-carga-con-gemini | Foto, PDF, Gemini, cola y reintentos | borrador | — | — |
-| 005-rubros-y-margenes | Porcentajes y recálculo | borrador | — | — |
+| 005-rubros-y-margenes | Rubros, márgenes y recálculo | borrador | — | — |
 | 006-consulta-de-precios | Buscador offline y ficha de producto | borrador | — | — |
 | 007-fraccionados | Granel por fracción o por peso | borrador | — | — |
 | 008-proveedores | Proveedores y sus días de pedido y entrega | borrador | — | — |

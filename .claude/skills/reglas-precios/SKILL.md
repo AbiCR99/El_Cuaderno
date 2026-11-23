@@ -1,6 +1,6 @@
 ---
 name: reglas-precios
-description: Úsala siempre que escribas, modifiques o revises código que calcule o muestre costos, IVA, bultos, bonificaciones, unidades de regalo, facturas viejas, márgenes, redondeo, precio fijo, fraccionados o variación de costo en El Cuaderno, incluida la pantalla de revisión, Porcentajes y la ficha de producto.
+description: Úsala siempre que escribas, modifiques o revises código que calcule o muestre costos, IVA, bultos, bonificaciones, unidades de regalo, facturas viejas, márgenes, redondeo, precio fijo, fraccionados o variación de costo en El Cuaderno, incluida la pantalla de revisión, Rubros y la ficha de producto.
 ---
 
 # Reglas de costos y precios
@@ -21,7 +21,7 @@ Esta es la regla de negocio central. Una sola implementación en `src/dominio/` 
 5. Si no: `precio = redondearDecena(costoUnitario, margenPct)`.
 
 ## Unidades de regalo (D17)
-Un renglón con costo 0 (precio $0 o bonificación 100 %) se une al renglón pago del **mismo producto** en la misma factura: `costoUnitario = costoRenglonesPagos / (unidadesPagas + unidadesRegalo)`. Si no hay renglón pago de ese producto: "regalo sin compra", sin costo ni precio sugerido (renglón amarillo, P15).
+Un renglón con costo 0 (precio $0 o bonificación 100 %) se une al renglón pago del **mismo producto** en la misma factura: `costoUnitario = costoRenglonesPagos / (unidadesPagas + unidadesRegalo)`. Si no hay renglón pago de ese producto, es una **muestra sin cargo** (D19): no se toma en cuenta (no crea producto, no guarda compra, no cambia costo).
 
 ## Descuentos generales (D13)
 Los descuentos al pie de la factura se ignoran. Solo cuentan las bonificaciones de cada renglón.
@@ -65,7 +65,8 @@ return decenas * 10;
 | alícuota 10,5 % sin IVA, neto 1000, 1 u | costo 1105,00 |
 | bonif 10 % sobre 2 × $1.000 | neto 1800 |
 | 1 bulto $12.000 × 24 u + renglón regalo 2 u, con IVA | costo 461,54 (12.000 ÷ 26) |
-| regalo sin renglón pago del mismo producto | sin costo ni precio, amarillo (P15) |
+| regalo sin renglón pago del mismo producto | muestra sin cargo: se descarta (D19) |
+| costo baja de 500 a 450, margen 30 % | sugiere 590 (antes 650); se aplica al confirmar (D18) |
 | factura del 10/11, última compra del 12/11 | no cambia costo ni precio |
 | factura del 12/11, última compra del 12/11 | sí cambia |
 | neto negativo | error de validación |

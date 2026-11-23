@@ -17,7 +17,7 @@ Administradora, familia y desarrolladora, con los mismos permisos (D5).
 - RF-1: EL SISTEMA muestra la revisión con el mismo componente sin importar el origen de los renglones.
 - RF-2: CUANDO el texto normalizado de un renglón coincide con un alias del mismo proveedor, EL SISTEMA lo empareja con ese producto y precarga las unidades por pack del alias si el renglón no las trae.
 - RF-3: EL SISTEMA muestra por renglón: producto, rubro, "packs × unidades = total", costo unitario, variación contra la compra anterior y precio sugerido editable, usando el motor de la spec 002.
-- RF-4: EL SISTEMA marca en amarillo, con su motivo, los renglones con: producto sin emparejar, rubro "Sin categoría" en producto nuevo, lectura dudosa, importe que no coincide, unidades por pack desconocidas en producto sin alias, precio vacío en producto de precio fijo, o regalo sin compra del mismo producto (P15). El resto, en verde.
+- RF-4: EL SISTEMA marca en amarillo, con su motivo, los renglones con: producto sin emparejar, rubro "Sin categoría" en producto nuevo, lectura dudosa, importe que no coincide, unidades por pack desconocidas en producto sin alias, o precio vacío en producto de precio fijo. Las muestras sin cargo (D19) van en gris y no cuentan. El resto, en verde.
 - RF-5: CUANDO la administradora toca un renglón amarillo sin emparejar, EL SISTEMA ofrece hasta 3 productos parecidos del catálogo y la opción "Producto nuevo" con el nombre prellenado y el rubro sugerido.
 - RF-6: MIENTRAS quede algún renglón amarillo o el botón con/sin IVA sin elegir, EL SISTEMA deshabilita "Confirmar todo" y muestra cuántos faltan.
 - RF-7: CUANDO la administradora toca "Confirmar todo", EL SISTEMA guarda en una sola operación: productos nuevos, alias nuevos, costo y precio de cada producto, historial y la factura como confirmada.
@@ -33,6 +33,8 @@ Administradora, familia y desarrolladora, con los mismos permisos (D5).
 - RF-17: EL SISTEMA muestra en Inicio, encima de los dos botones y solo si existen, la cantidad de facturas para revisar, en cola y con error (D10).
 - RF-18: SI ya hay una factura confirmada del mismo proveedor con el mismo número, ENTONCES EL SISTEMA muestra en la cabecera el aviso amarillo "Esta factura ya se cargó el {fecha}", sin bloquear la confirmación (D12).
 - RF-19: SI algún producto emparejado tiene una compra confirmada con fecha de factura posterior a la de esta factura, ENTONCES EL SISTEMA muestra en la cabecera el aviso amarillo "Factura vieja: N productos tienen una compra más nueva", marca esos renglones con "Hay una compra del {fecha}: el precio no cambia", y al confirmar guarda la compra sin cambiar el costo ni el precio de esos productos (D12).
+- RF-21: SI el precio sugerido es menor que el precio actual del producto, ENTONCES EL SISTEMA lo muestra como sugerencia con "antes $X" y solo lo aplica al confirmar la factura (D18).
+- RF-22: CUANDO un renglón es una muestra sin cargo (D19), EL SISTEMA lo muestra en gris con "Muestra sin cargo: no se carga" y al confirmar no crea producto, no guarda la compra ni cambia costos.
 - RF-20: MIENTRAS la factura no tiene fecha leída ni cargada, EL SISTEMA la pide como dato obligatorio de la cabecera, porque sin fecha no se puede evaluar RF-19.
 
 ## Requisitos no funcionales
@@ -59,4 +61,4 @@ Administradora, familia y desarrolladora, con los mismos permisos (D5).
 - Demo en Android: factura nueva (todo amarillo) → confirmar → misma factura otra vez → todo verde, un toque.
 
 ## Dudas abiertas
-- [NECESITA ACLARACIÓN] P12 (bajar precios automáticamente), P15 (regalo sin compra) y P16 (botones de Subir productos) de `docs/riesgos-y-preguntas.md`.
+- [NECESITA ACLARACIÓN] P16 (disposición de los botones de Subir productos) de `docs/riesgos-y-preguntas.md`.

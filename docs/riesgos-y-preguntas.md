@@ -11,7 +11,7 @@
 | D5 | 2026-11-23 | Permisos de la familia (antes P1) | **Exactamente los mismos que la administradora**: ven costos y márgenes, cargan y confirman facturas, editan precios, rubros y proveedores. La usan para calcular precios cuando llega un proveedor; normalmente lo hace la dueña. La hermana y la cuñada atienden a la tarde todos los días menos los martes. Reemplaza lo que decía el brief sobre la familia. |
 | D6 | 2026-11-23 | Supabase (antes P2) | Plan gratis con una cuenta de email nueva solo para el proyecto. Dos proyectos: `dev` y `prod`. |
 | D7 | 2026-11-23 | Botón con IVA / sin IVA (antes P3) | "Con IVA": los precios ya lo incluyen. "Sin IVA": se suma la alícuota (21 % salvo que el renglón diga otra). |
-| D8 | 2026-11-23 | Días de los proveedores (antes P4) | Botón **Proveedores** dentro de Subir productos, junto a Porcentajes: lista con nombre y días de pedido y entrega. La revisión crea el proveedor nuevo solo con el nombre. |
+| D8 | 2026-11-23 | Días de los proveedores (antes P4) | Botón **Proveedores** dentro de Subir productos, junto a Rubros: lista con nombre y días de pedido y entrega. La revisión crea el proveedor nuevo solo con el nombre. |
 | D9 | 2026-11-23 | "Repetir última compra" (antes P5) | Dentro de Manual. Es raro que se use: prioridad baja en el backlog. |
 | D10 | 2026-11-23 | Avisos en Inicio (antes P6) | Sí, solo cuando hay algo, encima de los dos botones. |
 | D11 | 2026-11-23 | Facturas de varias hojas (antes P7) | No existen. Una foto = una factura. |
@@ -20,15 +20,16 @@
 | D14 | 2026-11-23 | Fraccionados e IVA (antes P10) | La carga de fraccionado tiene el botón con/sin IVA (pasa por la revisión). Si el granel llega en una factura, el producto se marca fraccionado una vez y las compras siguientes usan esa configuración. Fase 1: solo carga manual. |
 | D15 | 2026-11-23 | Precio de 100 g (antes P11) | Se calcula aparte y se redondea a la decena; como todo precio, es una sugerencia editable. |
 | D16 | 2026-11-23 | Desarrollo en Mac mini con Monterey (antes P13) | Node 22 LTS (Node 24 pide macOS 13.5 o más). Supabase CLI con `npx supabase`, sin Docker; base local no, se usa el proyecto `dev`. |
+| D18 | 2026-11-23 | Precio que baja cuando baja el costo (antes P12) | Se sugiere el precio más bajo, con "antes $X" a la vista, y se aplica solo al confirmar (como cualquier precio de la revisión). Recalcular un rubro también pide confirmación. |
+| D19 | 2026-11-23 | Muestras gratis (antes P15) | No se venden. Un renglón de regalo de un producto que no viene pago en esa factura no se toma en cuenta: se muestra en gris "Muestra sin cargo: no se carga" y no crea producto, no guarda compra ni cambia costo. |
+| D20 | 2026-11-23 | Nombre del botón | "Porcentajes" pasa a llamarse **Rubros** (ahí se editan rubros y márgenes). |
 | D17 | 2026-11-23 | Unidades de regalo (antes P14) | Un renglón a $0 o con 100 % de bonificación ("llevás 12, pagás 10") suma sus unidades al mismo producto en la misma factura y baja su costo unitario. |
 
 ## Preguntas abiertas
 
 | # | Pregunta | Propuesta | Spec |
 |---|---|---|---|
-| P12 | Cuando el costo baja, el precio sugerido también baja (D1). ¿Está bien bajar precios automáticamente? | Se aplica tal cual (es lo que dice la fórmula) y la revisión muestra "antes $X" para que se vea. | 003 |
-| P15 | Regalo de un producto que no viene pago en la misma factura (una muestra gratis). | Renglón amarillo "Regalo sin compra": guarda la compra pero no cambia costo; si el producto es nuevo, pide el precio a mano. | 003 |
-| P16 | Subir productos pasa a tener 5 botones (Cámara, Subir PDF, Manual, Porcentajes, Proveedores). | Los tres de carga grandes, uno debajo del otro; Porcentajes y Proveedores más chicos, lado a lado abajo. | 003/008 |
+| P16 | Subir productos pasa a tener 5 botones (Cámara, Subir PDF, Manual, Rubros, Proveedores). | Los tres de carga grandes, uno debajo del otro; Rubros y Proveedores más chicos, lado a lado abajo. | 003/008 |
 
 ## Riesgos
 

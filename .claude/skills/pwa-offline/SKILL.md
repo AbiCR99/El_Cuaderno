@@ -9,7 +9,7 @@ description: Úsala siempre que toques el service worker, vite-plugin-pwa, el ma
 - **Consulta de precios** completa y ficha de producto en modo lectura (todos los usuarios tienen los mismos permisos).
 - **Sacar fotos y subir PDF**: quedan en cola.
 - **Revisión**: se puede revisar una factura ya descargada; "Confirmar todo" queda en cola.
-- No offline: ingreso por primera vez, Porcentajes (cambiar márgenes recalcula en la base).
+- No offline: ingreso por primera vez, Rubros y Proveedores (cambiar márgenes recalcula en la base).
 
 ## Reglas
 - vite-plugin-pwa con `registerType: 'autoUpdate'`: la versión nueva se aplica sola al reabrir. Precache del shell de la app; las llamadas a Supabase no se cachean con Workbox (los datos viven en Dexie).

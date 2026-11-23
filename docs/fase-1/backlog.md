@@ -20,7 +20,7 @@ Tareas chicas (20–40 min con el agente), en orden de dependencia, cada una ver
 - [ ] **T002-1. `normalizar.ts`**: texto de alias y números en formato argentino. RF-10, RF-11. — Hecho cuando: tests en verde.
 - [ ] **T002-2. `redondeo.ts`**: decena con 5 hacia arriba, aritmética entera. RF-5. — Hecho cuando: tests 113→110, 115→120, 117→120, 100×15 %→120, 1235→1240.
 - [ ] **T002-3. `costos.ts`**: neto, IVA, bonificaciones, costo unitario, validaciones. RF-1 a RF-4, RF-8, RF-9. — Hecho cuando: tests de cada RF y caso límite.
-- [ ] **T002-3b. Unidades de regalo**: unir renglones de regalo con el renglón pago del mismo producto. RF-12, RF-13. — Hecho cuando: test "24 pagas + 2 de regalo" da costo ÷ 26.
+- [ ] **T002-3b. Unidades de regalo**: unir renglones de regalo con el renglón pago del mismo producto. RF-12, RF-13. — Hecho cuando: test "24 pagas + 2 de regalo" da costo ÷ 26, y una muestra sin producto pago se descarta.
 - [ ] **T002-4. `precios.ts`**: precio sugerido, precio fijo efectivo, variación %. RF-5 a RF-7. — Hecho cuando: tests en verde.
 - [ ] **T002-5. Migración del esquema** (tablas, índices, triggers) según `docs/modelo-datos.md`. RF-12. — Hecho cuando: aplicada en dev y tipos generados en `src/datos/tipos.ts`.
 - [ ] **T002-6. Migración de RLS, Storage y RPC de sincronización** (`lista_precios`). — Hecho cuando: script RLS de T001-8 ampliado en verde y `get_advisors` sin alertas.
@@ -49,7 +49,7 @@ Tareas chicas (20–40 min con el agente), en orden de dependencia, cada una ver
 
 ## 005 · Rubros y márgenes
 - [ ] **T005-1. `recalculo.ts`**: productos afectados (N) y lote de cambios. RF-2 a RF-4. — Hecho cuando: tests (precio fijo excluido, sin costo excluido).
-- [ ] **T005-2. Pantalla Porcentajes**: lista y edición. RF-1, RF-5, RF-6, RF-8, RF-11. — Hecho cuando: crear y renombrar funciona, "Sin categoría" protegido.
+- [ ] **T005-2. Pantalla Rubros**: lista y edición. RF-1, RF-5, RF-6, RF-8, RF-11. — Hecho cuando: crear y renombrar funciona, "Sin categoría" protegido.
 - [ ] **T005-3. Cambiar margen con confirmación** + `aplicar_precios`. RF-2, RF-3. — Hecho cuando: demo Lácteos 18 → 20 % con historial.
 - [ ] **T005-4. Eliminar rubro moviendo productos**. RF-7. — Hecho cuando: los productos terminan en el destino elegido.
 - [ ] **T005-5. Cambio de rubro de un producto y precio fijo del rubro**. RF-9, RF-10. — Hecho cuando: las preguntas aparecen y respetan la respuesta.

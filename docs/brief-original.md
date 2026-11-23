@@ -3,6 +3,8 @@
 Copia del encargo inicial, sin cambios de alcance. Las decisiones posteriores están en `MEMORY.md` y `docs/riesgos-y-preguntas.md`; si contradicen este archivo, mandan ellas.
 
 > **Cambio importante posterior (D5):** la familia ya **no** es solo consulta. Tiene los mismos permisos que la administradora: ve costos, carga facturas y edita precios. Lo que dice abajo sobre la familia quedó superado.
+>
+> **Nombre (D20):** el botón "Porcentajes" ahora se llama **Rubros**.
 
 ## Contexto
 
