@@ -1,0 +1,23 @@
+# Dependencias y builds
+node_modules/
+dist/
+dev-dist/
+coverage/
+.vercel/
+
+# Secretos y configuración local
+.env
+.env.local
+.env.*.local
+supabase/.env
+supabase/functions/.env
+supabase/.temp/
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Sistema y editores
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
