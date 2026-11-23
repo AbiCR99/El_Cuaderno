@@ -19,7 +19,7 @@ La usuaria atiende sola, con clientes esperando, en un celular Android, muchas v
 - Estados obligatorios de cada pantalla: cargando, vacío, error, sin conexión y éxito. Escribilos en el plan.
 - Plata con `Intl.NumberFormat('es-AR')`, sin centavos en precios de venta. Fechas relativas con `Intl.RelativeTimeFormat('es-AR')`.
 - Nada de "stock" en la fase 1.
-- Si la skill `buena-ux` está instalada, aplicala además de esta.
+- Aplicá también la skill `buena-ux` (incluida en el repo): esta skill agrega lo propio del almacén; si chocan, manda esta.
 
 ## Cómo verificar
 Chrome DevTools MCP en 360 × 740, captura de cada estado. Recorrer el camino feliz contando toques.

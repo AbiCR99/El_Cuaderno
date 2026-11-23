@@ -21,13 +21,17 @@ Node 22 LTS (la Mac de desarrollo tiene Monterey; Node 24 no corre ahí). Supaba
 ## Variables de entorno
 Copiá `.env.example` a `.env.local` (no se sube al repo). Para los MCP, exportá en tu terminal `SUPABASE_PROJECT_REF_DEV` y, si tenés, `CONTEXT7_API_KEY`. Los secretos del servidor (`GEMINI_API_KEY`, `GEMINI_MODEL`, `CRON_SECRET`) van con `supabase secrets set`, nunca en archivos.
 
-## Skills externas recomendadas
-Instalar a nivel proyecto y revisar su `SKILL.md` antes de usarlas:
+## Skills
 
-```bash
-npx skills add supabase/agent-skills --skill supabase-postgres-best-practices
-npx skills add supabase/agent-skills --skill supabase
-npx skills add https://github.com/anthropics/skills --skill frontend-design
-npx skills add vercel-labs/agent-skills --skill web-design-guidelines
-claude plugin install mattpocock-skills@claude-plugins-official   # grill-me y otras
-```
+**Incluidas en el repo** (`.claude/skills/`): `sdd`, `reglas-precios`, `supabase-rls`, `gemini-facturas`, `pwa-offline`, `ux-almacen` y `buena-ux`.
+
+**Para instalar a nivel proyecto** (desde la carpeta del repo, con Node 22; revisá cada `SKILL.md` antes de usarla):
+
+| Skill | Para qué en este proyecto | Comando |
+|---|---|---|
+| `supabase` | Migraciones, Auth, Storage, Edge Functions y RLS bien hechas | `npx skills add supabase/agent-skills --skill supabase` |
+| `supabase-postgres-best-practices` | Índices, consultas y políticas RLS eficientes | `npx skills add supabase/agent-skills --skill supabase-postgres-best-practices` |
+| `grill-me` | Te interroga antes de aprobar cada spec | `claude plugin install mattpocock-skills@claude-plugins-official` |
+| `frontend-design` | Que las pantallas no se vean genéricas | `npx skills add https://github.com/anthropics/skills --skill frontend-design` |
+| `web-design-guidelines` | Revisión de accesibilidad y UX de lo construido | `npx skills add vercel-labs/agent-skills --skill web-design-guidelines` |
+| `systematic-debugging` | Depurar con método cuando algo falle en el celular | `npx skills add obra/superpowers --skill systematic-debugging` |
